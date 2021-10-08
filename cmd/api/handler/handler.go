@@ -13,7 +13,7 @@ func GetUsers(s *user.Service) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		users := s.GetUsers()
 
-		response := make([]*serializer.User, len(users))
+		response := []*serializer.User{}
 		for _, u := range users {
 			response = append(response, &serializer.User{
 				Id:    u.Id,
@@ -22,8 +22,7 @@ func GetUsers(s *user.Service) func(w http.ResponseWriter, r *http.Request) {
 				Admin: u.Admin,
 			})
 		}
-		data, _ := json.Marshal(response)
-		w.Write(data)
+		json.NewEncoder(w).Encode(response)
 	}
 }
 
@@ -49,14 +48,29 @@ func CreateUser(s *user.Service) func(w http.ResponseWriter, r *http.Request) {
 			Rules:           rules,
 			RequiredDefault: false,
 		}
-		err := govalidator.New(opts).ValidateJSON()
+		e := govalidator.New(opts).ValidateJSON()
 
-		if len(err) > 0 {
+		if len(e) > 0 {
 			w.Header().Set("Content-type", "application/json")
-			json.NewEncoder(w).Encode(err)
+			json.NewEncoder(w).Encode(e)
 			return
 		}
 
-		json.NewEncoder(w).Encode(body)
+		user, err := s.CreateUser(body.Name, body.Email, body.Password, body.Admin)
+
+		if err != nil {
+			w.Header().Set("Content-type", "application/json")
+			json.NewEncoder(w).Encode(e)
+			return
+		}
+
+		response := &serializer.User{
+			Id:    user.Id,
+			Name:  user.Name,
+			Email: user.Email,
+			Admin: user.Admin,
+		}
+
+		json.NewEncoder(w).Encode(response)
 	}
 }

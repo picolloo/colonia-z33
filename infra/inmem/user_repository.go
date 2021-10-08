@@ -1,8 +1,6 @@
 package inmem
 
 import (
-	"errors"
-
 	"github.com/google/uuid"
 	"github.com/picolloo/auth-playground/entities"
 )
@@ -17,8 +15,9 @@ func NewUserRepository() *UserRepository {
 	}
 }
 
-func (ur *UserRepository) CreateUser(name, email, password string, admin bool) *entities.User {
-	return nil
+func (ur *UserRepository) CreateUser(user *entities.User) *entities.User {
+	ur.users = append(ur.users, user)
+	return user
 }
 
 func (ur *UserRepository) PromoteUserToAdmin(id uuid.UUID) *entities.User {
@@ -29,11 +28,20 @@ func (ur *UserRepository) GetUsers() []*entities.User {
 	return ur.users
 }
 
-func (ur *UserRepository) GetUser(id uuid.UUID) (*entities.User, error) {
+func (ur *UserRepository) GetUser(id uuid.UUID) *entities.User {
 	for _, user := range ur.users {
 		if user.Id == id {
-			return user, nil
+			return user
 		}
 	}
-	return nil, errors.New("Invalid user ID")
+	return nil
+}
+
+func (ur *UserRepository) IsEmailInUse(email string) bool {
+	for _, user := range ur.users {
+		if user.Email == email {
+			return true
+		}
+	}
+	return false
 }
