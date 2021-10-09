@@ -32,13 +32,19 @@ func (s *Service) GetUsers() []*entities.User {
 	return s.repo.GetUsers()
 }
 
-func (s *Service) CreateUser(name, email, password string, admin bool) (*entities.User, error) {
+func (s *Service) CreateUser(name, email, password string) (*entities.User, error) {
+	if invalid_email := s.repo.IsEmailInUse(email); invalid_email {
+		return nil, errors.New("Email already in use.")
+	}
+
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
+	hash_password := string(bytes)
+
 	user := &entities.User{
 		Id:       uuid.New(),
 		Name:     name,
 		Email:    email,
-		Password: password,
-		Admin:    admin,
+		Password: hash_password,
 	}
 
 	s.repo.CreateUser(user)
