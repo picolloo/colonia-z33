@@ -7,7 +7,6 @@ type User struct {
 	Name     string
 	Email    string
 	Password string
-	Admin    bool
 }
 
 func NewUser(name, email, password string, admin bool) *User {
@@ -16,6 +15,5 @@ func NewUser(name, email, password string, admin bool) *User {
 		Name:     name,
 		Email:    email,
 		Password: password,
-		Admin:    admin,
 	}
 }

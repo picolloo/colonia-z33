@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/picolloo/auth-playground/cmd/api/handler"
-	"github.com/picolloo/auth-playground/infra/inmem"
-	"github.com/picolloo/auth-playground/usecase/user"
+	"github.com/picolloo/colonia-z33/cmd/api/handler"
+	"github.com/picolloo/colonia-z33/infra/inmem"
+	"github.com/picolloo/colonia-z33/usecase/user"
 )
 
 func main() {

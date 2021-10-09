@@ -2,7 +2,7 @@ package inmem
 
 import (
 	"github.com/google/uuid"
-	"github.com/picolloo/auth-playground/entities"
+	"github.com/picolloo/colonia-z33/entities"
 )
 
 type UserRepository struct {
@@ -18,10 +18,6 @@ func NewUserRepository() *UserRepository {
 func (ur *UserRepository) CreateUser(user *entities.User) *entities.User {
 	ur.users = append(ur.users, user)
 	return user
-}
-
-func (ur *UserRepository) PromoteUserToAdmin(id uuid.UUID) *entities.User {
-	return nil
 }
 
 func (ur *UserRepository) GetUsers() []*entities.User {

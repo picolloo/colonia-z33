@@ -4,7 +4,8 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/picolloo/auth-playground/entities"
+	"github.com/picolloo/colonia-z33/entities"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Service struct {
