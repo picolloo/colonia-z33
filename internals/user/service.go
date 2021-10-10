@@ -39,13 +39,12 @@ func (s *Service) CreateUser(name, email, password string) (*User, error) {
 	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 	hash_password := string(bytes)
 
-	user := &User{
-		Id:       uuid.New(),
-		Name:     name,
-		Email:    email,
-		Password: hash_password,
-	}
+	u := NewUser(
+		name,
+		email,
+		hash_password,
+	)
 
-	s.repo.CreateUser(user)
+	user := s.repo.CreateUser(u)
 	return user, nil
 }

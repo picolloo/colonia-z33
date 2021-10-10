@@ -9,7 +9,7 @@ type User struct {
 	Password string
 }
 
-func NewUser(name, email, password string, admin bool) *User {
+func NewUser(name, email, password string) *User {
 	return &User{
 		Id:       uuid.New(),
 		Name:     name,
