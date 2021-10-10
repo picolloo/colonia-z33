@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/picolloo/colonia-z33/entities"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -18,7 +17,7 @@ func NewService(repo Repository) *Service {
 	}
 }
 
-func (s *Service) GetUser(id uuid.UUID) (*entities.User, error) {
+func (s *Service) GetUser(id uuid.UUID) (*User, error) {
 	user := s.repo.GetUser(id)
 
 	if user == nil {
@@ -28,11 +27,11 @@ func (s *Service) GetUser(id uuid.UUID) (*entities.User, error) {
 	return user, nil
 }
 
-func (s *Service) GetUsers() []*entities.User {
+func (s *Service) GetUsers() []*User {
 	return s.repo.GetUsers()
 }
 
-func (s *Service) CreateUser(name, email, password string) (*entities.User, error) {
+func (s *Service) CreateUser(name, email, password string) (*User, error) {
 	if invalid_email := s.repo.IsEmailInUse(email); invalid_email {
 		return nil, errors.New("Email already in use.")
 	}
@@ -40,7 +39,7 @@ func (s *Service) CreateUser(name, email, password string) (*entities.User, erro
 	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 	hash_password := string(bytes)
 
-	user := &entities.User{
+	user := &User{
 		Id:       uuid.New(),
 		Name:     name,
 		Email:    email,
