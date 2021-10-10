@@ -2,16 +2,15 @@ package user
 
 import (
 	"github.com/google/uuid"
-	"github.com/picolloo/colonia-z33/entities"
 )
 
 type Writer interface {
-	CreateUser(*entities.User) *entities.User
+	CreateUser(*User) *User
 }
 
 type Reader interface {
-	GetUsers() []*entities.User
-	GetUser(uuid.UUID) *entities.User
+	GetUsers() []*User
+	GetUser(uuid.UUID) *User
 	IsEmailInUse(string) bool
 }
 

@@ -1,16 +1,16 @@
-package handler
+package ports
 
 import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/picolloo/colonia-z33/cmd/api/serializer"
-	"github.com/picolloo/colonia-z33/usecase/user"
+	"github.com/picolloo/colonia-z33/cmd/rest/serializer"
+	"github.com/picolloo/colonia-z33/internals/user"
 	"github.com/thedevsaddam/govalidator"
 )
 
-func GetUsers(s *user.Service) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func GetUsers(s *user.Service) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		users := s.GetUsers()
 
 		response := []*serializer.User{}
@@ -22,11 +22,11 @@ func GetUsers(s *user.Service) func(w http.ResponseWriter, r *http.Request) {
 			})
 		}
 		json.NewEncoder(w).Encode(response)
-	}
+	})
 }
 
-func CreateUser(s *user.Service) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func CreateUser(s *user.Service) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		body := struct {
 			Name     string `json:"name"`
 			Email    string `json:"email"`
@@ -68,5 +68,5 @@ func CreateUser(s *user.Service) func(w http.ResponseWriter, r *http.Request) {
 		}
 
 		json.NewEncoder(w).Encode(response)
-	}
+	})
 }
