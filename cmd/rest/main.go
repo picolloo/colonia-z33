@@ -10,10 +10,15 @@ import (
 	"github.com/picolloo/colonia-z33/internals/user"
 	user_adapters "github.com/picolloo/colonia-z33/internals/user/adapters"
 	user_ports "github.com/picolloo/colonia-z33/internals/user/ports"
+	"github.com/urfave/negroni"
 )
 
 func main() {
 	r := mux.NewRouter().StrictSlash(false)
+
+	server := http.NewServeMux()
+	n := negroni.Classic()
+	n.UseHandler(server)
 
 	user_repo := user_adapters.NewInmemRepository()
 	user_service := user.NewService(user_repo)
@@ -25,7 +30,7 @@ func main() {
 	customer_router := r.PathPrefix("/customers").Subrouter()
 	customer_ports.NewRouter(customer_service, customer_router)
 
-	http.Handle("/", r)
+	server.Handle("/", r)
 
-	http.ListenAndServe(":3000", http.DefaultServeMux)
+	n.Run(":3000")
 }
