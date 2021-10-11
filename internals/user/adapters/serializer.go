@@ -1,4 +1,4 @@
-package serializer
+package adapters
 
 import "github.com/google/uuid"
 
