@@ -82,8 +82,8 @@ func createCustomer(s *customer.Service) http.Handler {
 		e := govalidator.New(opts).ValidateJSON()
 
 		if len(e) > 0 {
-			w.Header().Set("Content-type", "application/json")
-			json.NewEncoder(w).Encode(e)
+			response, _ := json.Marshal(e)
+			http.Error(w, string(response), http.StatusBadRequest)
 			return
 		}
 
@@ -109,8 +109,7 @@ func createCustomer(s *customer.Service) http.Handler {
 		)
 
 		if err != nil {
-			w.Header().Set("Content-type", "application/json")
-			json.NewEncoder(w).Encode(e)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 

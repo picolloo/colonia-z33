@@ -1,9 +1,12 @@
 package main
 
 import (
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/picolloo/colonia-z33/internals/common/middlewares"
 	"github.com/picolloo/colonia-z33/internals/customer"
 	customer_adapters "github.com/picolloo/colonia-z33/internals/customer/adapters"
 	customer_ports "github.com/picolloo/colonia-z33/internals/customer/ports"
@@ -14,11 +17,11 @@ import (
 )
 
 func main() {
-	r := mux.NewRouter().StrictSlash(false)
+	r := mux.NewRouter()
 
-	server := http.NewServeMux()
 	n := negroni.Classic()
-	n.UseHandler(server)
+	n.UseHandler(r)
+	n.Use(negroni.HandlerFunc(middlewares.JsonMiddleware))
 
 	user_repo := user_adapters.NewInmemRepository()
 	user_service := user.NewService(user_repo)
@@ -30,7 +33,13 @@ func main() {
 	customer_router := r.PathPrefix("/customers").Subrouter()
 	customer_ports.NewRouter(customer_service, customer_router)
 
-	server.Handle("/", r)
+	s := &http.Server{
+		Addr:           ":3000",
+		Handler:        n,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
 
-	n.Run(":3000")
+	log.Fatal(s.ListenAndServe())
 }
