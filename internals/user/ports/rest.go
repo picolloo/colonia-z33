@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/picolloo/colonia-z33/internals/user"
 	"github.com/picolloo/colonia-z33/internals/user/adapters"
@@ -11,9 +12,35 @@ import (
 )
 
 func NewRouter(s *user.Service, r *mux.Router) *mux.Router {
+	r.Handle("/{id}", getUser(s)).Methods("GET")
 	r.Handle("", getUsers(s)).Methods("GET")
 	r.Handle("", createUser(s)).Methods("POST")
 	return r
+}
+
+func getUser( s *user.Service) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	  vars := mux.Vars(r)
+		id, err := uuid.Parse(vars["id"])
+
+		if err != nil {
+			http.Error(w, "Invalid ID.", http.StatusBadRequest)
+			return
+		}
+		user, err := s.GetUser(id)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
+		response :=  &adapters.User{
+			Id:    user.Id,
+			Name:  user.Name,
+			Email: user.Email,
+		}
+		json.NewEncoder(w).Encode(response)
+	})
 }
 
 func getUsers(s *user.Service) http.Handler {
@@ -76,3 +103,4 @@ func createUser(s *user.Service) http.Handler {
 		json.NewEncoder(w).Encode(response)
 	})
 }
+
