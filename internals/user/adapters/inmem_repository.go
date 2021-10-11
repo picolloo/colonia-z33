@@ -15,27 +15,27 @@ func NewInmemRepository() *InmemRepository {
 	}
 }
 
-func (ur *InmemRepository) CreateUser(user *user.User) *user.User {
-	ur.users = append(ur.users, user)
+func (r *InmemRepository) CreateUser(user *user.User) *user.User {
+	r.users = append(r.users, user)
 	return user
 }
 
-func (ur *InmemRepository) GetUsers() []*user.User {
-	return ur.users
+func (r *InmemRepository) GetUsers() []*user.User {
+	return r.users
 }
 
-func (ur *InmemRepository) GetUser(id uuid.UUID) *user.User {
-	for _, user := range ur.users {
-		if user.Id == id {
-			return user
+func (r *InmemRepository) GetUser(id uuid.UUID) *user.User {
+	for _, u := range r.users {
+		if u.Id == id {
+			return u
 		}
 	}
 	return nil
 }
 
 func (ur *InmemRepository) IsEmailInUse(email string) bool {
-	for _, user := range ur.users {
-		if user.Email == email {
+	for _, u := range ur.users {
+		if u.Email == email {
 			return true
 		}
 	}

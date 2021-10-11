@@ -4,21 +4,33 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/picolloo/colonia-z33/internals/customer"
+	customer_adapters "github.com/picolloo/colonia-z33/internals/customer/adapters"
+	customer_ports "github.com/picolloo/colonia-z33/internals/customer/ports"
 	"github.com/picolloo/colonia-z33/internals/user"
-	"github.com/picolloo/colonia-z33/internals/user/adapters"
-	"github.com/picolloo/colonia-z33/internals/user/ports"
+	user_adapters "github.com/picolloo/colonia-z33/internals/user/adapters"
+	user_ports "github.com/picolloo/colonia-z33/internals/user/ports"
+	"github.com/urfave/negroni"
 )
 
 func main() {
-	r := mux.NewRouter()
+	r := mux.NewRouter().StrictSlash(false)
 
-	user_repo := adapters.NewInmemRepository()
+	server := http.NewServeMux()
+	n := negroni.Classic()
+	n.UseHandler(server)
+
+	user_repo := user_adapters.NewInmemRepository()
 	user_service := user.NewService(user_repo)
+	user_router := r.PathPrefix("/users").Subrouter()
+	user_ports.NewRouter(user_service, user_router)
 
-	r.Handle("/users", ports.GetUsers(user_service)).Methods("GET")
-	r.Handle("/users", ports.CreateUser(user_service)).Methods("POST")
+	customer_repo := customer_adapters.NewInmemRepository()
+	customer_service := customer.NewService(customer_repo)
+	customer_router := r.PathPrefix("/customers").Subrouter()
+	customer_ports.NewRouter(customer_service, customer_router)
 
-	http.Handle("/", r)
+	server.Handle("/", r)
 
-	http.ListenAndServe(":3000", http.DefaultServeMux)
+	n.Run(":3000")
 }
