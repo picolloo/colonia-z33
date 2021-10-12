@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/picolloo/colonia-z33/internals/customer"
 	"github.com/picolloo/colonia-z33/internals/customer/adapters"
@@ -12,8 +13,51 @@ import (
 
 func NewRouter(s *customer.Service, r *mux.Router) *mux.Router {
 	r.Handle("", getCustomers(s)).Methods("GET")
+	r.Handle("/{id}", getCustomer(s)).Methods("GET")
 	r.Handle("", createCustomer(s)).Methods("POST")
 	return r
+}
+
+func getCustomer(s *customer.Service) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id, err := uuid.Parse(vars["id"])
+
+		if err != nil {
+			http.Error(w, "Invalid ID.", http.StatusBadRequest)
+			return
+		}
+		customer, err := s.GetCustomer(id)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
+		response := &adapters.Customer{
+			Id:           customer.Id,
+			Name:         customer.Name,
+			Email:        customer.Email,
+			Birth:        customer.Birth,
+			Phone:        customer.Phone,
+			CellPhone:    customer.CellPhone,
+			Status:       customer.Status.String(),
+			CreatedAt:    customer.CreatedAt,
+			Nationality:  customer.Nationality,
+			FatherName:   customer.FatherName,
+			MotherName:   customer.MotherName,
+			Scholarity:   customer.Scholarity,
+			Category:     customer.Category.String(),
+			RG:           customer.RG,
+			PIS:          customer.PIS,
+			CPF:          customer.CPF,
+			NIT:          customer.NIT,
+			CEI:          customer.CEI,
+			ElectorTitle: customer.ElectorTitle,
+		}
+
+		json.NewEncoder(w).Encode(response)
+	})
 }
 
 func getCustomers(s *customer.Service) http.Handler {
