@@ -29,55 +29,55 @@ func TestCreateCustomeWithAllProps(t *testing.T) {
 	)
 
 	if c.Name != "" {
-		t.Errorf("Expected name: %s, received: %s", "", c.Name)
+		t.Errorf("Expected name: %s Actual: %s", "", c.Name)
 	}
 	if c.Birth != "" {
-		t.Errorf("Expected birth: %s, received: %s", "", c.Birth)
+		t.Errorf("Expected birth: %s Actual: %s", "", c.Birth)
 	}
 	if c.Phone != "" {
-		t.Errorf("Expected Phone: %s, received: %s", "", c.Phone)
+		t.Errorf("Expected Phone: %s Actual: %s", "", c.Phone)
 	}
 	if c.Email != "" {
-		t.Errorf("Expected Email: %s, received: %s", "", c.Email)
+		t.Errorf("Expected Email: %s Actual: %s", "", c.Email)
 	}
 	if c.CellPhone != "" {
-		t.Errorf("Expected CellPhone: %s, received: %s", "", c.CellPhone)
+		t.Errorf("Expected CellPhone: %s Actual: %s", "", c.CellPhone)
 	}
 	if c.Status != Active {
-		t.Errorf("Expected Status: %s, received: %s", Active.String(), c.Status.String())
+		t.Errorf("Expected Status: %s Actual: %s", Active.String(), c.Status.String())
 	}
 	if c.CreatedAt != timestamp {
-		t.Errorf("Expected CreatedAt: %s, received: %s", timestamp, c.CreatedAt)
+		t.Errorf("Expected CreatedAt: %s Actual: %s", timestamp, c.CreatedAt)
 	}
 	if c.Nationality != "" {
-		t.Errorf("Expected Nationality: %s, received: %s", "", c.Nationality)
+		t.Errorf("Expected Nationality: %s Actual: %s", "", c.Nationality)
 	}
 	if c.FatherName != "" {
-		t.Errorf("Expected FatherName: %s, received: %s", "", c.FatherName)
+		t.Errorf("Expected FatherName: %s Actual: %s", "", c.FatherName)
 	}
 	if c.MotherName != "" {
-		t.Errorf("Expected MotherName: %s, received: %s", "", c.MotherName)
+		t.Errorf("Expected MotherName: %s Actual: %s", "", c.MotherName)
 	}
 	if c.Scholarity != "" {
-		t.Errorf("Expected Scholarity: %s, received: %s", "", c.Scholarity)
+		t.Errorf("Expected Scholarity: %s Actual: %s", "", c.Scholarity)
 	}
 	if c.Category != RetiredFishing {
-		t.Errorf("Expected Category: %s, received: %s", RetiredFishing.String(), c.Category.String())
+		t.Errorf("Expected Category: %s Actual: %s", RetiredFishing.String(), c.Category.String())
 	}
 	if c.PIS != "" {
-		t.Errorf("Expected PIS: %s, received: %s", "", c.PIS)
+		t.Errorf("Expected PIS: %s Actual: %s", "", c.PIS)
 	}
 	if c.CPF != "" {
-		t.Errorf("Expected CPF: %s, received: %s", "", c.CPF)
+		t.Errorf("Expected CPF: %s Actual: %s", "", c.CPF)
 	}
 	if c.NIT != "" {
-		t.Errorf("Expected NIT: %s, received: %s", "", c.NIT)
+		t.Errorf("Expected NIT: %s Actual: %s", "", c.NIT)
 	}
 	if c.CEI != "" {
-		t.Errorf("Expected CEI: %s, received: %s", "", c.CEI)
+		t.Errorf("Expected CEI: %s Actual: %s", "", c.CEI)
 	}
 	if c.ElectorTitle != "" {
-		t.Errorf("Expected ElectorTitle: %s, received: %s", "", c.ElectorTitle)
+		t.Errorf("Expected ElectorTitle: %s Actual: %s", "", c.ElectorTitle)
 	}
 }
 
