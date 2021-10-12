@@ -9,31 +9,31 @@ import (
 type Customer struct {
 	Id           uuid.UUID
 	Name         string
-	Birth        time.Time
-	Phone        time.Time
+	Phone        string
 	Email        string
-	CellPhone    time.Time
-	Status       Status
-	CreatedAt    time.Time
+	CellPhone    string
 	Nationality  string
 	FatherName   string
 	MotherName   string
 	Scholarity   string
-	Category     Category
 	RG           string
 	PIS          string
 	CPF          string
 	NIT          string
 	CEI          string
 	ElectorTitle string
+	Birth        string
+	Status       Status
+	Category     Category
+	CreatedAt    time.Time
 }
 
 func NewCustomer(
 	name string,
-	birth time.Time,
-	phone time.Time,
+	birth string,
+	phone string,
 	email string,
-	CellPhone time.Time,
+	cellphone string,
 	status Status,
 	createdAt time.Time,
 	nationality string,
@@ -54,7 +54,7 @@ func NewCustomer(
 		Birth:        birth,
 		Phone:        phone,
 		Email:        email,
-		CellPhone:    CellPhone,
+		CellPhone:    cellphone,
 		Status:       status,
 		CreatedAt:    createdAt,
 		Nationality:  nationality,
@@ -109,6 +109,7 @@ const (
 	RetiredFishing
 	Fishing
 	Entail
+	Unknown
 )
 
 func (c Category) String() string {
@@ -118,11 +119,11 @@ func (c Category) String() string {
 	case RetiredFishing:
 		return "Aposentado Pesca"
 	case Fishing:
-		return "Pesca Exlusiva"
+		return "Pesca Exclusiva"
 	case Entail:
 		return "Vínculo"
 	}
-	return ""
+	return "Desconhecida"
 }
 
 func CategoryFromString(value string) Category {
@@ -131,10 +132,10 @@ func CategoryFromString(value string) Category {
 		return RetiredGeneral
 	case "Aposentado Pesca":
 		return RetiredFishing
-	case "Pesca Exlusiva":
+	case "Pesca Exclusiva":
 		return Fishing
 	case "Vínculo":
 		return Entail
 	}
-	return Entail
+	return Unknown
 }

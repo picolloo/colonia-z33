@@ -9,10 +9,10 @@ import (
 type Customer struct {
 	Id           uuid.UUID `json:"id"`
 	Name         string    `json:"name"`
-	Birth        time.Time `json:"birth"`
-	Phone        time.Time `json:"phone"`
+	Birth        string    `json:"birth"`
+	Phone        string    `json:"phone"`
 	Email        string    `json:"email"`
-	CellPhone    time.Time `json:"cellPhone"`
+	CellPhone    string    `json:"cellPhone"`
 	Status       string    `json:"status"`
 	CreatedAt    time.Time `json:"createdAt"`
 	Nationality  string    `json:"nationality"`

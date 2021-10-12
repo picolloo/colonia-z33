@@ -33,10 +33,10 @@ func (s *Service) GetCustomers() []*Customer {
 
 func (s *Service) CreateCustomer(
 	name string,
-	birth time.Time,
-	phone time.Time,
+	birth string,
+	phone string,
 	email string,
-	cellPhone time.Time,
+	cellPhone string,
 	status Status,
 	createdAt time.Time,
 	nationality string,
