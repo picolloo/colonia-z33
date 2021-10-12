@@ -15,9 +15,9 @@ func NewInmemRepository() *InmemRepository {
 	}
 }
 
-func (r *InmemRepository) CreateCustomer(user *customer.Customer) *customer.Customer {
-	r.customers = append(r.customers, user)
-	return user
+func (r *InmemRepository) CreateCustomer(customer *customer.Customer) *customer.Customer {
+	r.customers = append(r.customers, customer)
+	return customer
 }
 
 func (r *InmemRepository) GetCustomers() []*customer.Customer {
