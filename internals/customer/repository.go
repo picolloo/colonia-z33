@@ -4,7 +4,7 @@ import "github.com/google/uuid"
 
 type Writer interface {
 	CreateCustomer(*Customer) *Customer
-	// UpdateCustomer(*Customer) *Customer
+	UpdateCustomer(*Customer) *Customer
 }
 
 type Reader interface {

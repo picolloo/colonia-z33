@@ -2,6 +2,7 @@ package customer
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -72,5 +73,15 @@ func (s *Service) CreateCustomer(
 		electorTitle,
 	)
 	customer := s.repo.CreateCustomer(c)
+	return customer, nil
+}
+
+func (s *Service) UpdateCustomer(c *Customer) (*Customer, error) {
+	customer := s.repo.UpdateCustomer(c)
+
+	if customer == nil {
+		return nil, errors.New(fmt.Sprintf("User %s not found", c.Id))
+	}
+
 	return customer, nil
 }

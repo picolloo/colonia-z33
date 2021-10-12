@@ -15,6 +15,7 @@ func NewRouter(s *customer.Service, r *mux.Router) *mux.Router {
 	r.Handle("", getCustomers(s)).Methods("GET")
 	r.Handle("/{id}", getCustomer(s)).Methods("GET")
 	r.Handle("", createCustomer(s)).Methods("POST")
+	r.Handle("/{id}", updateCustomer(s)).Methods("PUT")
 	return r
 }
 
@@ -151,6 +152,106 @@ func createCustomer(s *customer.Service) http.Handler {
 			body.CEI,
 			body.ElectorTitle,
 		)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		response := &adapters.Customer{
+			Id:           customer.Id,
+			Name:         customer.Name,
+			Email:        customer.Email,
+			Birth:        customer.Birth,
+			Phone:        customer.Phone,
+			CellPhone:    customer.CellPhone,
+			Status:       customer.Status.String(),
+			CreatedAt:    customer.CreatedAt,
+			Nationality:  customer.Nationality,
+			FatherName:   customer.FatherName,
+			MotherName:   customer.MotherName,
+			Scholarity:   customer.Scholarity,
+			Category:     customer.Category.String(),
+			RG:           customer.RG,
+			PIS:          customer.PIS,
+			CPF:          customer.CPF,
+			NIT:          customer.NIT,
+			CEI:          customer.CEI,
+			ElectorTitle: customer.ElectorTitle,
+		}
+
+		json.NewEncoder(w).Encode(response)
+	})
+}
+
+func updateCustomer(s *customer.Service) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body adapters.Customer
+
+		rules := govalidator.MapData{
+			"name":         []string{},
+			"email":        []string{"email"},
+			"birth":        []string{"date"},
+			"phone":        []string{"date"},
+			"cellPhone":    []string{"date"},
+			"status":       []string{"in:Ativo,Inativo,Desabilitado"},
+			"createdAt":    []string{"date"},
+			"nationality":  []string{},
+			"fatherName":   []string{},
+			"motherName":   []string{},
+			"scholarity":   []string{},
+			"category":     []string{"in:Aposentado Geral,Aposentado Pesca,Pesca Exclusiva,Vínculo"},
+			"RG":           []string{},
+			"PIS":          []string{},
+			"CPF":          []string{},
+			"NIT":          []string{},
+			"CEI":          []string{},
+			"electorTitle": []string{},
+		}
+
+		opts := govalidator.Options{
+			Request:         r,
+			Data:            &body,
+			Rules:           rules,
+			RequiredDefault: false,
+		}
+		e := govalidator.New(opts).ValidateJSON()
+
+		if len(e) > 0 {
+			response, _ := json.Marshal(e)
+			http.Error(w, string(response), http.StatusBadRequest)
+			return
+		}
+
+		vars := mux.Vars(r)
+		id, err := uuid.Parse(vars["id"])
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		customer, err := s.UpdateCustomer(&customer.Customer{
+			Id:           id,
+			Name:         body.Name,
+			Birth:        body.Birth,
+			Phone:        body.Phone,
+			Email:        body.Email,
+			CellPhone:    body.CellPhone,
+			Status:       customer.StatusFromString(body.Status),
+			CreatedAt:    body.CreatedAt,
+			Nationality:  body.Nationality,
+			FatherName:   body.FatherName,
+			MotherName:   body.MotherName,
+			Scholarity:   body.Scholarity,
+			Category:     customer.CategoryFromString(body.Category),
+			RG:           body.RG,
+			PIS:          body.PIS,
+			CPF:          body.CPF,
+			NIT:          body.NIT,
+			CEI:          body.CEI,
+			ElectorTitle: body.ElectorTitle,
+		})
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)

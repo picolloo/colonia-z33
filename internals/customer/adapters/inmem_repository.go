@@ -32,3 +32,14 @@ func (r *InmemRepository) GetCustomer(id uuid.UUID) *customer.Customer {
 	}
 	return nil
 }
+
+func (r *InmemRepository) UpdateCustomer(c *customer.Customer) *customer.Customer {
+	for i, c := range r.customers {
+		if c.Id == c.Id {
+			new_customer := append(r.customers[:i], c)
+			r.customers = append(new_customer, r.customers[i+1:]...)
+			return c
+		}
+	}
+	return nil
+}
